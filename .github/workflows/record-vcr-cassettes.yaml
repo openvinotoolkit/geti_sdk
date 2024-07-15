@@ -2,14 +2,20 @@ name: Record and push VCR cassettes
 
 on:
   workflow_dispatch:  # run on request (no need for PR)
+  pull_request:
+    branches:
+      - main
+    types:
+      - labeled
 
 env:
   GETI_USERNAME: ${{ secrets.GETI_USERNAME }}
   GETI_PASSWORD: ${{ secrets.GETI_PASSWORD }}
   # Python version
-  PYTHON_VERSION: 3.9
+  PYTHON_VERSION: "3.10"
 
   # Other environment variables used in the tests
+  TEST_TARGET: "tests/pre-merge/integration"
   TEST_MODE: "RECORD"
   REPORT_DIRECTORY: reports
   VIRTUALENV_DIRECTORY: .venv
@@ -28,6 +34,27 @@ jobs:
     runs-on: [self-hosted, sdk-runner]
 
     steps:
+      - id: label-the-PR
+        if: github.event_name == 'pull_request'
+        uses: actions/labeler@v5
+
+      - name: Smart CI
+        if: github.event_name == 'pull_request'
+        run: |
+          export TEST_TARGET=""
+          if [[ ${{ contains(steps.label-the-PR.outputs.all-labels, 'SDK-Core') }} ]]; then
+            export TEST_TARGET="tests/pre-merge/integration/test_geti.py $TEST_TARGET"
+          fi
+          if [[ ${{ contains(steps.label-the-PR.outputs.all-labels, 'Rest-Clients') }} ]]; then
+            export TEST_TARGET="tests/pre-merge/integration/rest_clients/ $TEST_TARGET"
+          fi
+          if [[ ${{ contains(steps.label-the-PR.outputs.all-labels, 'HTTP-Session') }} ]]; then
+            export TEST_TARGET="tests/pre-merge/integration/http_session/ $TEST_TARGET"
+          fi
+          if [[ ${{ contains(steps.label-the-PR.outputs.all-labels, 'Geti-Utils') }} ]]; then
+            export TEST_TARGET="tests/pre-merge/integration/utils/ $TEST_TARGET"
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
@@ -56,7 +83,7 @@ jobs:
           export NO_PROXY=$GETI_HOST,$NO_PROXY
           export GETI_HOST=https://$GETI_HOST
 
-          pytest tests/pre-merge/integration --html=$REPORT_DIRECTORY/integration_test_report_legacy.html --self-contained-html
+          pytest $TEST_TARGET --html=$REPORT_DIRECTORY/integration_test_report_legacy.html --self-contained-html
         env:
           # Login details for the Geti instance to run the tests against
           # Secrets are configured on the repository level (Settings > Secrets)
@@ -73,7 +100,7 @@ jobs:
           export NO_PROXY=$GETI_HOST,$NO_PROXY
           export GETI_HOST=https://$GETI_HOST
 
-          pytest tests/pre-merge/integration --html=$REPORT_DIRECTORY/integration_test_report_develop.html --self-contained-html
+          pytest $TEST_TARGET --html=$REPORT_DIRECTORY/integration_test_report_develop.html --self-contained-html
         env:
           # Login details for the Geti instance to run the tests against
           # Secrets are configured on the repository level (Settings > Secrets)

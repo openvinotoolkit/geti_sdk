@@ -1,0 +1,33 @@
+Rest-Clients:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'geti_sdk/rest_clients/**'
+    - 'tests/pre-merge/integration/rest_clients/*'
+
+HTTP-Session:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'geti_sdk/http_session/*'
+    - 'tests/pre-merge/integration/http_session/*'
+
+SDK-Core:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'geti_sdk/geti.py'
+    - 'tests/pre-merge/integration/test_geti.py'
+
+Geti-Utils:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'geti_sdk/utils/*'
+    - 'tests/pre-merge/integration/utils/*'
+
+Documentation:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'docs/**'
+
+Notebooks:
+- changed-files:
+  - any-glob-to-any-file:
+    - 'notebooks/**'
