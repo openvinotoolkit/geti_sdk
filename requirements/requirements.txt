@@ -9,7 +9,7 @@ tqdm>=4.66.3
 Pillow==11.1.*
 pathvalidate>=2.5.0
 simplejson==3.19.*
-ipython==8.18.*
+ipython==8.31.*
 openvino>=2023.2.0
 openvino-model-api==0.2.*
 certifi>=2024.2.2
