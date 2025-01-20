@@ -17,6 +17,7 @@ from .confidence_trigger import ConfidenceTrigger
 from .empty_label_trigger import EmptyLabelTrigger
 from .label_trigger import LabelTrigger
 from .object_count_trigger import ObjectCountTrigger
+from .ood_trigger import OODTrigger
 
 __all__ = [
     "AlwaysTrigger",
@@ -24,4 +25,5 @@ __all__ = [
     "LabelTrigger",
     "EmptyLabelTrigger",
     "ObjectCountTrigger",
+    "OODTrigger",
 ]

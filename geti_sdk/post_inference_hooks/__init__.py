@@ -23,6 +23,7 @@ from .triggers import (
     EmptyLabelTrigger,
     LabelTrigger,
     ObjectCountTrigger,
+    OODTrigger,
 )
 
 __all__ = [
@@ -32,6 +33,7 @@ __all__ = [
     "EmptyLabelTrigger",
     "ObjectCountTrigger",
     "AlwaysTrigger",
+    "OODTrigger",
     "GetiDataCollection",
     "FileSystemDataCollection",
     "HttpRequestAction",
